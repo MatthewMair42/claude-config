@@ -1,0 +1,17 @@
+# Line endings are a property of this repository, not of each contributor's
+# git config. Without this, someone committing from Windows with
+# core.autocrlf=false introduces CRLF, and everyone else then sees whole-file
+# diffs on any file they touch.
+#
+# text=auto  — normalize to LF when storing in the repository
+# eol=lf     — check out LF in the working tree on every platform
+* text=auto eol=lf
+
+# Binary: never convert, never diff.
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.ico  binary
+*.ttf  binary
+*.otf  binary
