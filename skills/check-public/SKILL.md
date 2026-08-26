@@ -46,6 +46,11 @@ rather than in its frontmatter.
    username-based grep misses them entirely, and they are wrong for every
    other machine. Grep bare `C:[/\]`, `/opt/`, `/usr/local/` as well.
 
+   Also grep the **POSIX drive form** — Git Bash on Windows renders `C:/R/...`
+   as `/c/R/...`, which no `C:` pattern matches. Include `/[a-z]/` drive roots,
+   `.exe`, `Rscript`, `pdflatex`, `python3?`, and version-pinned directory names
+   like `R-[0-9]+.[0-9]+`. This exact form shipped past three earlier scans.
+
    Tool paths belong in `machine.md` (tier 3). A skill should point at
    `machine.md`, never name an install path directly.
 

@@ -39,10 +39,14 @@ and produce a persistent, dated verification report.
 
 ## PHASE 2: Run Verification
 
-Write the R script below to `code/R/.verify_data_temp.R`, then run:
+Write the R script below to `code/R/.verify_data_temp.R`, then run it.
+
+`<Rscript>` below stands for this machine's Rscript invocation — read
+`~/.claude/machine.md` for it. R is frequently not on `PATH` and the path is
+version-pinned, so never hardcode one into this skill.
 
 ```bash
-/c/R/R-4.4.2/bin/Rscript.exe code/R/.verify_data_temp.R
+<Rscript> code/R/.verify_data_temp.R
 ```
 
 ### R Script
@@ -184,7 +188,7 @@ cat("\n--- STATE UPDATED ---\n")
 
 If `jsonlite` is not installed, run first:
 ```bash
-/c/R/R-4.4.2/bin/Rscript.exe -e "install.packages('jsonlite', repos='https://cran.r-project.org')"
+<Rscript> -e "install.packages('jsonlite', repos='https://cran.r-project.org')"
 ```
 
 ---
