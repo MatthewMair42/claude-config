@@ -88,7 +88,29 @@ This file is **machine-local and never synced** — it differs on every machine
 the user works on.
 
 Detect what you can rather than asking. Probe for the tools the skills actually
-use, and record the invocation that works:
+use, and record the invocation that works.
+
+**Resolving a tool is not the same as running it.** `command -v python`
+succeeding proves only that *something* answers to that name. Always execute
+each candidate — `<tool> --version` — and record only an invocation that
+actually returns a version.
+
+Two traps this catches:
+
+- **Windows Store stubs.** On Windows, `python` and `python3` often resolve to
+  `.../AppData/Local/Microsoft/WindowsApps/python`, a shim that prints "Python
+  was not found; run without arguments to install from the Microsoft Store" and
+  exits 0. It is on `PATH`, it is not Python, and the real interpreter is
+  usually an Anaconda or python.org install elsewhere.
+- **Shadowed or stale installs.** The first match on `PATH` may be an older
+  version than the one the user means.
+
+When the on-`PATH` name fails to execute, search common install roots
+(`/c/R/`, `~/anaconda3/`, `/c/Program Files/`, `/opt/`, `/usr/local/`), verify
+by running, and record the full working path — noting explicitly that the bare
+name does NOT work, so nothing later tries it.
+
+Probe for:
 
 - R / Rscript
 - Python
