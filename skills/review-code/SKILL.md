@@ -22,7 +22,8 @@ In standalone mode, the Debugger runs **categories 4-12 only** (code quality). C
 > **Adaptation note:** The `debugger` agent is installed globally at `~/.claude/agents/debugger.md`.
 > Dispatch to it via the Task tool as described below. If a `quality_reports/` directory
 > does not exist in the project, create it or save the report to a sensible alternative location.
-> R invocations on this machine use `C:/R/R-4.4.2/bin/Rscript.exe`.
+> Read `~/.claude/machine.md` for this machine's R, Python, and LaTeX paths before
+> invoking any of them — they differ per machine and may not be on `PATH`.
 
 ## Workflow
 

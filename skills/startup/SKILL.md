@@ -127,7 +127,9 @@ Before loading action items, check whether this project is a git repository:
 Before entering Focus Mode, load project-specific context to inform the walkthrough:
 
 1. Check for `.claude/domain-profile.md` in the current project directory. If it exists, read it.
-2. Check for `~/.claude/private/domain-profile.md` (global). Read it.
+2. Check for `~/.claude/private/domain-profile.md` (global). Read it if present.
+   If absent, proceed without field calibration rather than guessing conventions —
+   and say so once, so the user knows `/setup` would sharpen the walkthrough.
 3. Check for the project's `CLAUDE.md`. Read any sections relevant to methods, journal
    target, advisor constraints, or (for software packages) review target/package
    conventions.

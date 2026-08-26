@@ -36,8 +36,18 @@ Grep tracked files for:
 `private/profile.md`; any name appearing in the body prose of a skill or agent
 rather than in its frontmatter.
 
-**Paths** — `C:\Users\<anything>`, `C:/Users/<anything>`, `/Users/<anything>`,
-`/home/<anything>`, `OneDrive`, and any institution name.
+**Paths** — two distinct classes, and the second is easy to miss:
+
+1. *User paths*: `C:\Users\<anything>`, `C:/Users/<anything>`,
+   `/Users/<anything>`, `/home/<anything>`, `OneDrive`, any institution name.
+2. *Machine tool paths with no username in them* — `C:/R/...`,
+   `C:\Program Files\...`, `/opt/...`, `/usr/local/Cellar/...`, any
+   version-pinned install root. These carry no identifying string, so a
+   username-based grep misses them entirely, and they are wrong for every
+   other machine. Grep bare `C:[/\]`, `/opt/`, `/usr/local/` as well.
+
+   Tool paths belong in `machine.md` (tier 3). A skill should point at
+   `machine.md`, never name an install path directly.
 
 **Projects** — every project name listed in `private/PROJECTS.md`, plus any
 venue or review status (`R&R`, `Major Revision`, journal names) sitting in a

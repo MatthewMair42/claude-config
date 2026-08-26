@@ -74,6 +74,8 @@ If the project's stage changed during this session (e.g., submitted, received an
 restructured scope), add one line:
 > "This looks like a stage change — update `~/.claude/private/PROJECTS.md` with the new status."
 
+If `private/PROJECTS.md` does not exist, skip this prompt entirely rather than offering to create it.
+
 Say: "Session closed. See you next time."
 
 ---

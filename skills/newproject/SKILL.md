@@ -168,7 +168,10 @@ Create a new research project folder with the researcher's standard structure. T
    - Record the creation date under `## Work Done`
    - List next steps under `## Key Decisions` if any structural choices were made
 
-7. **Update `~/.claude/private/PROJECTS.md`** — add a new row to the projects table:
+7. **Update `~/.claude/private/PROJECTS.md`** — add a new row to the projects table.
+   If `private/PROJECTS.md` does not exist, skip this step and tell the user the
+   project was not registered, with a one-line pointer: copy `PROJECTS.template.md`
+   to `private/PROJECTS.md`, or run `/setup`. Do not create it silently at the repo root.
    ```
    | [project-name] | `[relative path from your research root]` | Early stage | 0 | YYYY-MM-DD |
    ```
