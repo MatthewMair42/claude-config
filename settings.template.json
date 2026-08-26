@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(**/.claude/ACTION-ITEMS.md)",
+      "Edit(**/.claude/logs/*.md)",
+      "Edit(**/.claude/completed_archive.md)",
+      "Write(**/.claude/completed_archive.md)",
+      "Write(**/.claude/logs/*.md)"
+    ]
+  },
+  "autoUpdatesChannel": "latest",
+  "tui": "fullscreen",
+  "theme": "dark"
+}
