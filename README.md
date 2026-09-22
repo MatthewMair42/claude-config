@@ -24,6 +24,18 @@ cd ~/.claude && git init && git remote add origin <this-repo-url>
 git pull origin main
 ```
 
+If you already have a `~/.claude/CLAUDE.md`, that pull **will abort** —
+`CLAUDE.md` is the one tracked file that collides with an existing Claude Code
+install. Move yours aside first, then merge back whatever you want to keep:
+
+```bash
+mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.mine
+git pull origin main
+```
+
+Nothing else collides: `settings.json`, `machine.md`, and `private/` are all
+gitignored here.
+
 Then open Claude Code in `~/.claude/` and run:
 
 ```

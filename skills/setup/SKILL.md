@@ -58,6 +58,11 @@ Write `private/profile.md` from `profile.template.md`. Leave skipped fields
 blank — a blank field is a valid answer meaning "ask me later", and is always
 safer than a guess.
 
+Strip the template's instructional prose as you fill it: the blockquote at the
+top **and** the prompt line under each section ("Names that should be recognised
+in project files and session logs"). Those are directions to whoever fills the
+file in, not content. Keep the headers and the values.
+
 ---
 
 ## PHASE 2: Field and methods  → `private/domain-profile.md`
@@ -121,6 +126,31 @@ For each: record the full path, the version, whether it is on `PATH`, and any
 invocation gotcha discovered while testing. Ask only about tools you could not
 find. If a tool is absent, record it as absent — that is useful information, not
 a failure.
+
+### Research roots — the one thing here you must ask
+
+Tool paths can be probed. Where the user keeps their research cannot.
+
+Ask: **"Where do your research projects live? Give me each top-level folder —
+most people have one, some keep a cloud-synced tree and a local one."**
+
+Record them as named roots in `machine.md`:
+
+```markdown
+## Research roots
+- **cloud:** `C:\Users\you\OneDrive - Your University`
+- **local:** `C:\Research`
+```
+
+Explain why the names matter: `private/PROJECTS.md` stores paths as
+`{cloud}/papers/coastal-hedonics`, and it syncs across machines while `machine.md`
+does not. The same row then resolves on every machine, provided each machine
+defines the **same names**. If the user works on more than one machine, say
+plainly that they will need this section in the other machine's `machine.md`
+too, with the same names and that machine's paths.
+
+If they skip, record the section with a blank list. `/overview` will report
+unresolved roots rather than guessing — which is the intended failure, not a bug.
 
 ---
 

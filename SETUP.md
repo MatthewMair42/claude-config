@@ -28,9 +28,11 @@ mkdir -p private
 cp profile.template.md private/profile.md
 ```
 
-Name, institution, collaborators, working preferences. **Leave blank anything you
-are unsure about.** A blank field makes skills ask you; a guessed field makes
-them act confidently on a wrong value.
+Name, institution, and collaborators. **Leave blank anything you are unsure
+about.** A blank field makes skills ask you; a guessed field makes them act
+confidently on a wrong value.
+
+Working preferences do *not* go here — see step 6.
 
 ### 2. Field conventions — `private/domain-profile.md`
 
@@ -64,6 +66,35 @@ cp PROJECTS.template.md private/PROJECTS.md
 ```
 
 Needed only by `/overview`. `/newproject` maintains it as you go.
+
+### 6. Working preferences — `CLAUDE.md` (optional)
+
+`CLAUDE.md` is loaded automatically at the start of every session. `profile.md`
+is not — it is read on demand, only by the skills that need your name. So a rule
+about how Claude should *behave* only takes effect in `CLAUDE.md`; the same words
+in `profile.md` do nothing.
+
+The shipped `CLAUDE.md` already sets sensible defaults — plan before multi-step
+work, log decisions, compile LaTeX clean. Change them if they are not yours. To
+add your own, append a section:
+
+```markdown
+## Working preferences
+
+- Recommend one option rather than surveying all of them.
+- Explain at the level of a second-year PhD student; skip the basics.
+- Show me the diff before editing anything under `code/`.
+- Ask before running anything that takes more than a minute.
+```
+
+Keep it short. Rules about *how the work is done* — estimators, clustering,
+seed policy, table style — belong in `private/domain-profile.md` instead, where
+the skills that care about them will read it.
+
+**Already have your own `CLAUDE.md`?** Keep it. Add whatever sections of this
+repo's version you want and delete the rest — nothing here depends on the file
+being unmodified. See the note in `README.md` about installing over an existing
+`~/.claude/`.
 
 ---
 

@@ -173,8 +173,13 @@ Create a new research project folder with the researcher's standard structure. T
    project was not registered, with a one-line pointer: copy `PROJECTS.template.md`
    to `private/PROJECTS.md`, or run `/setup`. Do not create it silently at the repo root.
    ```
-   | [project-name] | `[relative path from your research root]` | Early stage | 0 | YYYY-MM-DD |
+   | [project-name] | `{root}/[path below that root]` | Early stage | 0 | YYYY-MM-DD |
    ```
+   The path must start with a root token defined in `machine.md` under
+   `## Research roots` — `{cloud}`, `{local}`, or whatever the user named them.
+   Match the new project's location to the right root; if it sits under none of
+   them, say so and ask whether to add a root to `machine.md` rather than
+   writing an absolute path, which would break on their other machines.
    Use today's date. Status defaults to "Early stage". Confirm the row was added.
 
 8. **Report success** — show structure with `ls`, remind user to:

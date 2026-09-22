@@ -32,12 +32,26 @@ counts in `PROJECTS.md`. Two-level: summary first, drill-down on request.
    - **Path** (column 2 — strip backticks)
    - **Status** (column 3)
    - **Last Session** (column 5)
-3. Construct the full `ACTION-ITEMS.md` path for each project:
+3. Resolve each project's root token and construct its `ACTION-ITEMS.md` path.
+   Every path in `PROJECTS.md` begins with a token — `{cloud}`, `{local}`, or
+   whatever names the user chose. Read `~/.claude/machine.md`, section
+   `## Research roots`, which maps each name to a path on THIS machine:
+
    ```
-   {projects-root}/{path}/.claude/ACTION-ITEMS.md
+   <root for token>/<rest of path>/.claude/ACTION-ITEMS.md
    ```
-   `{projects-root}` is the research root recorded in `private/profile.md`;
-   paths may contain spaces, so always quote them.
+
+   `PROJECTS.md` is synced across machines; `machine.md` is not. That is why the
+   mapping lives there — never hardcode a home directory or a research root in
+   this skill.
+
+   If a path carries no token, or names a root `machine.md` does not define,
+   report that row as an error naming the missing root and move on. Do not guess
+   a default and do not fall back to the home directory — a silently wrong root
+   produces a plausible-looking dashboard built on nothing.
+
+   Roots and project paths routinely contain spaces (`OneDrive - Your
+   University`, `Field Studies`), so always quote the assembled path.
 
 ---
 
@@ -162,8 +176,10 @@ Do not modify the Status or Last Session columns — those are manually maintain
 
 - **Read-mostly:** the only write operation is optionally updating open-item counts
   in `PROJECTS.md` (Edit, not Write — preserves the rest of the file).
-- **Path resolution:** project paths are relative to the research root recorded in `private/profile.md`. Never hardcode a home directory in this skill.
-  Handle spaces in paths gracefully — research roots often contain them.
+- **Path resolution:** every `PROJECTS.md` path starts with a root token whose
+  value lives in `machine.md` under `## Research roots`. Never hardcode a home
+  directory or a research root in this skill, and never default an unknown
+  token — report it. Handle spaces gracefully; roots usually contain them.
 - **Stale threshold:** 30 days is a reasonable default. Do not flag projects
   explicitly marked `On hold` or `Archived` as stale.
 - **Token cost:** lean by design — reads only `## Open` sections, not full files.

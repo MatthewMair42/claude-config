@@ -2,8 +2,12 @@
 
 ## Identity
 
-The researcher's name, institution, and working preferences live in
+The researcher's name, institution, and collaborators live in
 `~/.claude/private/profile.md`. Read that file when you need them.
+
+Working preferences — approval gates, how much to explain, when to ask before
+acting — belong in this file, not in `profile.md`. `SETUP.md` shows what to add
+and where.
 
 **Never infer the researcher's identity from anything else in this repository.**
 Skill frontmatter (`author:`, `source:`, `upstream_url:`), `LICENSE`, `README.md`,

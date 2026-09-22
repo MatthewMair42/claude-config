@@ -12,22 +12,8 @@
 - **Institution:**
 - **Role:**
 
-## Field
-
-- **Primary field:**
-- **Adjacent fields:**
-
-## Working preferences
-
-Anything you want applied across every project — approval gates, how much to
-explain, when to ask before acting.
-
--
-
 ## Collaborators
 
 Names that should be recognised in project files and session logs.
 
-| Name | Role |
-|---|---|
-|  |  |
+-
