@@ -26,7 +26,7 @@ Create a new research project folder with the researcher's standard structure. T
 
 ```
 [project-name]/
-├── CLAUDE.md              # Permanent research rules (copied from template)
+├── CLAUDE.md              # Project-specific context (global rules: ~/.claude/rules/)
 ├── README.md              # Project-specific overview (auto-generated)
 ├── .claude/
 │   ├── ACTION-ITEMS.md    # Evolving task list; persists across sessions
@@ -116,15 +116,27 @@ Create a new research project folder with the researcher's standard structure. T
    }
    ```
 
-4. **Copy CLAUDE.md** from `~/.claude/CLAUDE.md`:
-   - This copies the full global machine config including all behavioral rules (Identity, Approval Gates, Git, Data Verification, LaTeX, Session Logging, Tool Paths)
-   - No placeholder substitution needed — Identity section points at private/profile.md
+4. **Create the project `CLAUDE.md`** — project-specific context only:
+   - Do NOT copy `~/.claude/CLAUDE.md`. That is a one-line stub importing the
+     researcher's private preferences, and copying it would drag personal
+     context into a project that may be shared or archived publicly.
+   - The global conventions live in `~/.claude/rules/` and already apply to
+     every project on this machine, so they do not need duplicating here.
+     Duplicating them also risks the two copies drifting apart.
+   - Write a short file covering what is genuinely project-specific: the
+     research question in a sentence, data sources and access constraints,
+     the identification strategy if one is settled, and anything a
+     collaborator would need that the code does not say.
+   - If this project will be handed to a collaborator or archived as a
+     replication package — where `~/.claude/rules/` will not be present —
+     offer to copy the relevant rule files into the project's `.claude/rules/`,
+     and say which ones. Do not do it unprompted.
 
 5. **Generate README.md** with:
    - Project title
    - Visual directory tree in a fenced code block (monospace)
    - Explanation of each folder's purpose
-   - Note that CLAUDE.md is copied from a permanent template and edited per-project
+   - Note that CLAUDE.md holds project-specific context; global conventions come from `~/.claude/rules/`
    - Note that README.md is for project-specific documentation
    - Note that `.claude/logs/` maintains session continuity across Claude conversations
    - Placeholder sections: Overview, Collaborators, Status, Key Files

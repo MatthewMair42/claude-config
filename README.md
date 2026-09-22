@@ -24,16 +24,11 @@ cd ~/.claude && git init && git remote add origin <this-repo-url>
 git pull origin main
 ```
 
-If you already have a `~/.claude/CLAUDE.md`, that pull **will abort** —
-`CLAUDE.md` is the one tracked file that collides with an existing Claude Code
-install. Move yours aside first, then merge back whatever you want to keep:
-
-```bash
-mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.mine
-git pull origin main
-```
-
-Nothing else collides: `settings.json`, `machine.md`, and `private/` are all
+Your own `CLAUDE.md` is safe — this repo does not track one, so nothing
+collides and nothing of yours is overwritten. The conventions ship as
+`rules/*.md`, which Claude Code loads every session at the same priority a
+user-level `CLAUDE.md` would. Keep the rules you want, delete the files you
+don't. `settings.json`, `machine.md`, `CLAUDE.md` and `private/` are all
 gitignored here.
 
 Then open Claude Code in `~/.claude/` and run:
@@ -55,9 +50,9 @@ publishable and your research context private.
 
 | Tier | What | Synced how | Where |
 |---|---|---|---|
-| **1 — Shareable** | skills, agents, templates, docs | this repo | `~/.claude/` |
-| **2 — Personal, portable** | profile, domain profile, project index, writing samples | *your own private repo* | `~/.claude/private/` |
-| **3 — Machine-local** | `machine.md`, `settings.json` | not synced | `~/.claude/` |
+| **1 — Shareable** | skills, agents, `rules/`, templates, docs | this repo | `~/.claude/` |
+| **2 — Personal, portable** | profile, domain profile, `CLAUDE.md`, project index, writing samples | *your own private repo* | `~/.claude/private/` |
+| **3 — Machine-local** | `machine.md`, `settings.json`, the `CLAUDE.md` stub | not synced | `~/.claude/` |
 
 `private/` is gitignored here on purpose. Your name, field, projects, and
 writing never enter this repository. To carry them between machines, make
@@ -71,6 +66,16 @@ git clone <this-repo-url>        ~/.claude
 git clone <your-private-repo>    ~/.claude/private
 ```
 
+Then one line, because Claude Code only loads `~/.claude/CLAUDE.md` at that
+exact path — a file inside `private/` is never picked up on its own:
+
+```bash
+echo '@private/CLAUDE.md' > ~/.claude/CLAUDE.md
+```
+
+That stub is gitignored and machine-local; the preferences it imports live in
+your private repo and travel with it. `/setup` writes it for you.
+
 > Keep tier 2 private, and keep data out of it. Never commit human-subjects
 > data, credentials, or anything under a data use agreement — those belong in
 > your institution's approved storage, not in git.
@@ -81,7 +86,7 @@ git clone <your-private-repo>    ~/.claude/private
 
 | Path | Purpose |
 |---|---|
-| `CLAUDE.md` | Global instructions: approval gates, git conventions, LaTeX rules, session logging |
+| `rules/` | Global conventions, one file per topic: approval gates, git, LaTeX, session logging |
 | `skills/` | 26 skills, invoked as `/<name>` or auto-discovered |
 | `agents/` | Specialist sub-agents — econometrician, referee, editor, debugger, proofreader |
 | `SETUP.md` | Setup checklist and the manual configuration path |

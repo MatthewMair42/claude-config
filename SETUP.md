@@ -67,16 +67,33 @@ cp PROJECTS.template.md private/PROJECTS.md
 
 Needed only by `/overview`. `/newproject` maintains it as you go.
 
-### 6. Working preferences — `CLAUDE.md` (optional)
+### 6. Working preferences — `private/CLAUDE.md` (optional)
 
-`CLAUDE.md` is loaded automatically at the start of every session. `profile.md`
-is not — it is read on demand, only by the skills that need your name. So a rule
-about how Claude should *behave* only takes effect in `CLAUDE.md`; the same words
-in `profile.md` do nothing.
+The shipped conventions live in `rules/` — one file per topic (identity,
+approval gates, git, data verification, LaTeX, tool paths, domain profile,
+session logging). Claude Code loads every `.md` in `~/.claude/rules/` at the
+start of each session, at the same priority a user-level `CLAUDE.md` would
+have. They apply as soon as you clone. Delete any file whose conventions are
+not yours; nothing else depends on it.
 
-The shipped `CLAUDE.md` already sets sensible defaults — plan before multi-step
-work, log decisions, compile LaTeX clean. Change them if they are not yours. To
-add your own, append a section:
+Your *personal* preferences — how much to explain, when to ask before acting,
+tone — are not conventions anyone should inherit, so they live outside this
+repo:
+
+```bash
+cp CLAUDE.template.md private/CLAUDE.md
+echo '@private/CLAUDE.md' > CLAUDE.md
+```
+
+Two files, because Claude Code loads `~/.claude/CLAUDE.md` at that exact path
+and nowhere else. The stub is gitignored and machine-local; the file it imports
+sits in your private repo and travels between machines with it. A missing import
+is skipped silently, so if you clone this repo without `private/`, sessions
+start with no personal layer and no warning.
+
+Keep it short, and mind the boundary: rules about *how the work is done* —
+estimators, clustering, seed policy, table style — belong in
+`private/domain-profile.md`, where the skills that care about them will read it.
 
 ```markdown
 ## Working preferences
@@ -87,14 +104,9 @@ add your own, append a section:
 - Ask before running anything that takes more than a minute.
 ```
 
-Keep it short. Rules about *how the work is done* — estimators, clustering,
-seed policy, table style — belong in `private/domain-profile.md` instead, where
-the skills that care about them will read it.
-
-**Already have your own `CLAUDE.md`?** Keep it. Add whatever sections of this
-repo's version you want and delete the rest — nothing here depends on the file
-being unmodified. See the note in `README.md` about installing over an existing
-`~/.claude/`.
+**Already have your own `~/.claude/CLAUDE.md`?** Keep it — this repo does not
+track one, so cloning will not touch it. Add the `@private/CLAUDE.md` line to
+it if you want the synced personal layer as well.
 
 ---
 
@@ -160,6 +172,6 @@ The fix is a rule about where identity is allowed to live:
   appear here.
 
 So this repo credits its authors in metadata, keeps its instruction prose free of
-any specific person, and `CLAUDE.md` explicitly forbids inferring your name from
+any specific person, and `rules/identity.md` explicitly forbids inferring your name from
 repository files. Run `/check-public` before publishing a fork — it enforces
 exactly this distinction.
