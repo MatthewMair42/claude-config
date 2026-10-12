@@ -157,23 +157,47 @@ This context is used silently to sharpen the Phase 2 walkthrough. Do not display
 
 ## PHASE 2: Focus Mode
 
-When the user selects an item number (or the next item in a sequence), present the
-appropriate walkthrough based on the item's bucket, then wait for confirmation before
-doing any work.
+When the user selects an item number (or the next item in a sequence), present a
+walkthrough, then wait for confirmation before doing any work.
 
-### QUICK WIN items
+### Choosing the format
+
+The format follows the **weight of the decision**, not the item's bucket. The bucket
+says how urgent an item is; it does not say whether there is a real choice to make.
+
+Use the **full format** if ANY of these hold:
+
+1. **Genuine choice** — two or more defensible approaches lead to meaningfully
+   different outcomes, and the runner-up is not obviously worse.
+2. **Hard to reverse** — publishing, deleting, restructuring a paper, committing to
+   an estimator or specification, anything outward-facing.
+3. **Expertise or discretion** — the right answer depends on identification,
+   inference, referee strategy, review-target conventions, or the user's own
+   preferences that cannot be inferred from the project.
+
+Otherwise use the **single-recommendation format**. Most QUICK WIN items land here,
+but so can a straightforward CRITICAL or OPTIONAL item — and a QUICK WIN that hides a
+real judgment call gets the full format.
+
+**If unsure, use the full format.** Over-presenting costs a few lines; under-presenting
+a decision that mattered costs a choice the user never got to make.
+
+### Single-recommendation format
 
 ```
 TASK
-[One sentence: what specifically will be done.]
+[1–2 sentences: what specifically will be done, and why this item exists.]
 
-WHY
-[One sentence: why this item exists.]
+PLAN
+[The one approach to take, concretely. A few lines at most.]
+
+(Alt: [Optional one-liner — include only if a credible alternative exists, so the
+user can override without asking for the full lineup.])
 ```
 
 Then ask: **"Ready to proceed?"**
 
-### CRITICAL and OPTIONAL items
+### Full format
 
 ```
 PROBLEM
@@ -241,9 +265,10 @@ Once an item is finished:
 
 - This skill is read-only. All edits happen in the normal conversation after the
   walkthrough is presented and the user confirms.
-- Quick Win walkthroughs use the lightweight format (TASK + WHY only). CRITICAL and
-  OPTIONAL items use the full format. User confirmation is required before work starts
-  in both cases.
+- Walkthrough format follows decision weight, not bucket (see "Choosing the format"):
+  full options when choice, irreversibility, or expertise matters — or when unsure —
+  and a single recommendation otherwise. User confirmation is required before work
+  starts in both cases.
 - Calibrate explanation depth to a 2nd-year applied economics PhD student: technically
   literate, has taken econometrics sequences, but may not have deep expertise in every
   identification strategy or software tool. This applies to both project types — for
