@@ -59,6 +59,13 @@ cp settings.template.json settings.json
 
 Gitignored. Yours alone.
 
+The template registers one hook, `hooks/protect-raw-data.sh`. Any edit, write,
+delete, move, or redirect that targets a `data/raw/` folder triggers a permission
+prompt instead of running silently, so raw data is only ever copied out, never
+changed in place. It runs under Git Bash on Windows and natively on macOS/Linux,
+with no dependencies. It guards Claude's own tool calls, not scripts that write
+to `data/raw/` internally. Remove the `hooks` block if you don't want it.
+
 ### 5. Project index — `private/PROJECTS.md` (optional)
 
 ```bash
