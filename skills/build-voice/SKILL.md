@@ -3,17 +3,18 @@ name: build-voice
 description: |
   Analyze a corpus of the user's human-written papers and build a persistent voice profile at ~/.claude/private/voice-profile.md.
   Use when setting up the voice skill suite for the first time, or after adding new writing samples.
+  Reads .tex, .txt, and .pdf samples; each PDF is read once and its prose saved to a reusable extract.
 author: Matthew Mair
-version: 1.0.0
-argument-hint: "[optional: extra .tex or .txt file paths beyond the default writing-samples/ directory]"
-allowed-tools: ["Read", "Write", "Glob"]
+version: 1.1.0
+argument-hint: "[optional: extra .tex, .txt, or .pdf file paths beyond the default writing-samples/ directory]"
+allowed-tools: ["Read", "Write", "Glob", "Bash", "Agent"]
 ---
 
 # Build Voice Profile
 
 Analyze a corpus of the researcher's human-written academic papers and synthesize a structured voice profile saved to `~/.claude/private/voice-profile.md`. This profile is the shared foundation for `/voice-review` and `/voice-write`.
 
-**Input:** `$ARGUMENTS` — optional extra file paths. Default corpus is all `.tex` and `.txt` files in `~/.claude/private/writing-samples/`.
+**Input:** `$ARGUMENTS` — optional extra file paths. Default corpus is all `.tex`, `.txt`, and `.pdf` files in `~/.claude/private/writing-samples/`.
 
 ---
 
@@ -21,17 +22,57 @@ Analyze a corpus of the researcher's human-written academic papers and synthesiz
 
 ### Step 1: Collect Files
 
-1. Glob `~/.claude/private/writing-samples/*.tex` and `~/.claude/private/writing-samples/*.txt`.
+1. Glob `~/.claude/private/writing-samples/*.tex`, `*.txt`, and `*.pdf`.
 2. If `$ARGUMENTS` contains additional paths, add them.
 3. If the combined file list is empty, **halt** with this message:
 
-   > No writing samples found. Drop `.tex` or `.txt` files into `~/.claude/private/writing-samples/` and re-run `/build-voice`.
+   > No writing samples found. Drop `.tex`, `.txt`, or `.pdf` files into `~/.claude/private/writing-samples/` and re-run `/build-voice`.
 
-4. Report the list of files to be analyzed before proceeding.
+4. **Note each file's provenance.** A file whose name marks AI involvement (e.g.
+   "(written with some AI assistance)") is *AI-assisted*; everything else is
+   *human-written*. Do not drop or rename these tags — the filename is where the
+   provenance lives, and losing it would let a rebuild treat assisted prose as
+   ground truth.
+5. Report the list of files to be analyzed, with provenance, before proceeding.
+
+### Step 1.5: Extract PDF Prose (once per PDF)
+
+A PDF is read once. Its prose is saved to `<basename>_voice.md` next to the PDF,
+and every later rebuild reads that extract instead of the PDF.
+
+For each PDF:
+
+1. **Extract exists** — if `<basename>_voice.md` sits beside the PDF, use it and
+   skip the PDF entirely.
+2. **Text layer** — otherwise, try pulling text with pypdf. Python's path is in
+   `~/.claude/machine.md`; never trust a bare `python` on Windows. If it yields
+   roughly 100+ words per page, write the text to `<basename>_voice.md` and
+   continue. No page images are read.
+3. **Scanned PDF** (no usable text layer) — use the `/split-pdf` mechanics with one
+   change in what is extracted:
+   - Split into 4-page chunks in `writing-samples/split_<basename>/` (the split
+     script is in `/split-pdf` Step 2). Never delete the original PDF.
+   - **Always read in a subagent** — this skill keeps working after the read, so
+     page images must not land in the parent conversation (`/split-pdf`, Agent
+     Isolation Protocol). The subagent reads 3 chunks at a time.
+   - **Transcribe, don't summarize.** Unlike `/split-pdf`'s 8 research
+     dimensions, the voice analysis needs the author's actual sentences. The
+     subagent copies body prose verbatim — preserving punctuation, hedges, and
+     transitions exactly — and skips equations, tables, figures, captions,
+     headers/footers, page numbers, and the reference list. Section headings stay
+     as `##` lines. Illegible text is marked `[illegible]`, never guessed.
+   - The subagent appends to `<basename>_voice.md` after each batch, so an
+     interrupted read resumes from the last chunk written.
+4. Begin every extract with a header line recording source file, method
+   (`text layer` or `scanned, N chunks`), date, and provenance. Then tell the user
+   which extracts were created or reused.
+
+`split_<basename>/` is a working copy and can be regenerated; the extract is the
+durable artifact.
 
 ### Step 2: Extract Prose
 
-For each file:
+For each file (for PDFs, read the `_voice.md` extract — never the PDF itself):
 
 1. Read the full content.
 2. **Strip LaTeX boilerplate** — discard:
@@ -43,7 +84,13 @@ For each file:
    - `\maketitle`, `\tableofcontents`, `\listoffigures`
 3. **Retain** text inside: `abstract`, `section`, `subsection`, plain paragraph text, `quote`, `quotation` environments.
 4. Strip remaining LaTeX commands (e.g., `\textit{}`, `\cite{}`, `\label{}`, `\ref{}`, `\footnote{}`) but keep their text content where applicable.
-5. Collect the cleaned prose from all files into a single analysis corpus. Track approximate word count.
+5. Collect the cleaned prose from all files into a single analysis corpus. Track approximate word count, per provenance.
+
+**Weighting by provenance.** Human-written samples are the ground truth for
+sentence-level voice (Dimensions 1, 2, 5, 6, 7). AI-assisted samples may inform
+content framing (Dimensions 3, 4), but must not be the sole source for any
+sentence-level pattern. If the corpus has no human-written sample, say so in the
+profile's Corpus note rather than presenting the profile as the author's voice.
 
 ### Step 3: Analyze — 7 Dimensions
 
@@ -101,8 +148,10 @@ Write the analysis to `~/.claude/private/voice-profile.md` using this format:
 ```markdown
 # Voice Profile — <researcher name from private/profile.md>
 **Built:** YYYY-MM-DD
-**Corpus:** [list filenames, one per line]
+**Corpus:** [list filenames, one per line, each with its provenance: human-written or AI-assisted]
 **Prose words analyzed:** ~N
+
+> **Corpus note:** [which samples set sentence-level voice, and which only inform framing]
 
 > This profile is manually editable. Add, remove, or annotate any section. Re-run
 > `/build-voice` to regenerate from the corpus, which will overwrite this file.
