@@ -59,12 +59,20 @@ cp settings.template.json settings.json
 
 Gitignored. Yours alone.
 
-The template registers one hook, `hooks/protect-raw-data.sh`. Any edit, write,
-delete, move, or redirect that targets a `data/raw/` folder triggers a permission
-prompt instead of running silently, so raw data is only ever copied out, never
-changed in place. It runs under Git Bash on Windows and natively on macOS/Linux,
-with no dependencies. It guards Claude's own tool calls, not scripts that write
-to `data/raw/` internally. Remove the `hooks` block if you don't want it.
+The template registers two hooks. Each one turns a change into a permission prompt
+instead of letting it run silently, so you can still approve a specific case:
+
+- `hooks/protect-raw-data.sh` fires on any edit, write, delete, move, or redirect
+  that targets a `data/raw/` folder. Raw data is only ever copied out, never
+  changed in place.
+- `hooks/protect-bib.sh` fires on any edit or write to a `.bib` file. You verify
+  bibliography entries by hand. Reading `.bib` files and running LaTeX builds
+  (`bibtex`/`biber`) are not affected.
+
+Both run under Git Bash on Windows and natively on macOS/Linux, with no
+dependencies. They share helpers in `hooks/lib.sh`. They guard Claude's own tool
+calls, not scripts that write files internally. To turn one off, delete its
+entry from the `hooks` block.
 
 ### 5. Project index — `private/PROJECTS.md` (optional)
 
