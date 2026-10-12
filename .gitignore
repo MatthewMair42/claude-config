@@ -60,6 +60,14 @@ mcp-needs-auth-cache.json
 .last-update-result.json
 daemon/
 tasks/
+/daemon-auth-cooldown
+/daemon-auth-status.json
+/daemon.lock
+/daemon.log
+/daemon.status.json
+/jobs/
+/skills/synced/
+/.claude/
 
 # Ephemeral outputs
 logs/
