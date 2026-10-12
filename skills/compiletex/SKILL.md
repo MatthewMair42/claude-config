@@ -81,3 +81,10 @@ No fatal errors.
 ## After Compilation
 
 If there were warnings or errors, offer to fix them. The goal is a clean compile with zero warnings.
+
+**Circuit breaker.** If three different fixes for the same error have failed, stop
+editing. Quote the log line, list the three approaches and why each failed, and
+ask the user how to proceed — each failed fix makes the file harder to repair.
+"The same error" persists at, or moves near, the same line; a warning elsewhere is
+a new error and resets the count. Zero warnings is the goal, not a licence for
+unlimited attempts.

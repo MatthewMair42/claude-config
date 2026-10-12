@@ -6,9 +6,9 @@ argument-hint: [topic-or-tex-file-path]
 source: mixtapetools
 author: Scott Cunningham
 adapted_by: Matthew Mair
-adaptation: light
+adaptation: moderate
 upstream_url: https://github.com/scunning1975/MixtapeTools/blob/main/.claude/skills/compiledeck/SKILL.md
-last_synced: 2026-08-25
+last_synced: 2026-10-12
 upstream_status: >
   Active. Since this fork, upstream split deck work across three skills:
   `compiledeck` (mechanical compile loop, preamble templates, palette, TikZ
@@ -43,6 +43,43 @@ See `domain_patterns.md` for detailed guidance per audience type.
 **Q3: What's the tone?**
 1. **Professional/Academic** — use the Warm Professional palette (default) or Academic Muted
 2. **Colorful/Expressive** — create something new each time. See `palette_reference.md` for inspiration.
+
+---
+
+## Step 1.5: The Outline Checkpoint (new decks only)
+
+Before writing any slides, design the arc (Step 6) and write it to
+`<deck>_outline.md` next to the `.tex`. Show it to the user and **wait for
+approval**. Fixing an arc here costs one file; fixing it after every slide is
+written costs a rewrite. Skip this step when editing an existing deck.
+
+```markdown
+# <Deck name> — Outline
+
+## Audience and tone
+<Q2 and Q3 answers>
+
+## The one sentence
+<What the audience should remember tomorrow — this becomes the closing slide.
+If it cannot be stated in one sentence, resolve that before going further.>
+
+## The arc
+### Act I — Setup (slides 1–4)
+  1. Title
+  2. Opening: <puzzle, surprise, or provocation>
+  3. Stakes: <why this matters>
+### Act II — Development (slides 5–N)
+  5. <Assertion title>
+  ...
+### Act III — Resolution
+  K. Closing: <the one sentence>
+
+## Figures and tables
+  - <what each shows, and the script that generates it>
+```
+
+Read only the titles in sequence. If they do not tell the argument on their
+own, the arc is broken — fix it here.
 
 ---
 
@@ -208,6 +245,12 @@ Read `tikz_rules.md` BEFORE creating any TikZ figure. The rules are measurement-
 
 **Critical rule preview**: Before placing a label between two nodes, CALCULATE the edge-to-edge gap and compare it to the estimated text width. If the text is wider than the gap minus 0.6cm padding, the label WILL collide. Move it above/below or shorten the text.
 
+**Never define a parameterized TikZ style inside a frame.** Beamer's frame
+parser consumes `#` before TikZ sees it, producing "Illegal parameter number"
+errors that cascade through the compile and resist the usual workarounds
+(`##1`, `[fragile]`, `\catcode`). Define every style that takes `#1` in the
+preamble with `\tikzset{...}`; inside frames, only *use* styles.
+
 ---
 
 ## Step 5: The Compile Loop
@@ -273,6 +316,15 @@ Full rules and formulas are in `tikz_rules.md`. This verification runs on ALL Ti
 ### 5f: Open the PDF
 Skip this step. The user will open the PDF manually.
 
+### 5g: The circuit breaker
+If **three different approaches** to the same error have failed, STOP editing.
+Quote the log line, list the three approaches and why each failed, and ask the
+user how to proceed. Every failed fix leaves the file harder to repair than
+before. "The same error" means one that persists at, or moves near, the same
+line after a fix; a warning on a different slide is a new error and resets the
+count. This overrides "recompile until clean": zero warnings is the goal, not a
+licence for unlimited attempts.
+
 ---
 
 ## Step 6: The Narrative Arc
@@ -283,7 +335,40 @@ Every deck tells a story. The structure depends on context, but the principle is
 **Act II — Development**: Present evidence, analysis, investigation. Build the logical case.
 **Act III — Resolution**: Deliver the insight. State implications. Give the audience something to do or remember.
 
-Within this arc, apply the **Pyramid Principle**: lead with the conclusion, then support it. Academic audiences expect this. Do not build suspense — state the finding, then prove it.
+Two ordering rules apply inside the arc. They govern different kinds of content,
+so they do not conflict:
+
+**Presenting findings → the Pyramid Principle.** Lead with the conclusion, then
+support it. Academic audiences expect this. Do not build suspense — state the
+finding, then prove it.
+
+**Teaching a concept → the pedagogical movement.** Whenever a slide sequence has
+to make the audience *understand* something — a method, an identification
+strategy, a model, a definition — move in this order, never the reverse:
+
+**Narrative → Application → Picture → Codeblock → Technical**
+
+| Stage | What it looks like |
+|---|---|
+| Narrative | A concrete scene: a named place, a real decision, a real problem |
+| Application | A specific example the audience can hold: "suppose you are a county assessor…" |
+| Picture | One figure or diagram that shows the pattern before it is named |
+| Codeblock | A short snippet showing how it is computed (optional where code adds nothing) |
+| Technical | The equation, assumption, or estimator — as a summary of what the audience already intuits |
+
+The anti-pattern is opening with definitions, stating the theorem, and offering
+an example "for intuition" at the end: it treats the technical as primary and
+intuition as decoration. The formal statement is what the audience walks away
+with, not what they walk in with. If an equation appears before the picture that
+motivates it, swap them.
+
+*Exceptions:* a load-bearing term may be defined early, but give the plain-English
+meaning first and the formal definition on the next slide. Title slides, roadmaps,
+and section dividers are structural and exempt.
+
+*Typical split:* a teaching lecture is mostly pedagogical movement; a research
+seminar uses the Pyramid for results and the movement for the methods slides
+that explain how those results were identified.
 
 For domain-specific structures, see `domain_patterns.md`.
 
@@ -317,6 +402,11 @@ When a deck needs data visualizations:
 | TikZ labels | Calculate the gap (see tikz_rules.md) |
 | Color palette | 10+ colors, warm by default |
 | Narrative | Setup, Development, Resolution |
+| Before slides | Outline in `<deck>_outline.md`, approved by user |
+| Findings | Conclusion first (Pyramid) |
+| Concepts | Narrative → Application → Picture → Code → Technical |
+| TikZ styles with `#1` | Preamble only, via `\tikzset` |
+| Same error, 3 failed fixes | Stop and ask |
 
 ---
 
@@ -332,16 +422,18 @@ checkpoint, code-first figure generation, and separate rhetoric and graphics
 audit agents. It calls `compiledeck` for compilation rather than reimplementing
 it, and reads the palette from this file.
 
-Two ideas from `beautiful_deck` are not yet reflected here and are tracked as
-an open action item:
+Ported from `beautiful_deck` on 2026-10-12:
 
-- **The outline checkpoint** — write the arc to `<deck>_outline.md` and get
-  approval *before* generating any slides. Fixing an arc is far cheaper at the
-  outline stage than after every slide is written.
-- **The pedagogical movement** — sequence every topic narrative → application
-  → picture → codeblock → technical, never the reverse. The formal statement
-  arrives as a summary of what the audience already understands, not as a wall
-  they must climb first.
+- **The outline checkpoint** (Step 1.5).
+- **The pedagogical movement** (Step 6), scoped here to teaching a concept, so
+  it sits alongside the Pyramid Principle for findings instead of replacing it.
+- **Rule 6** (no parameterized TikZ styles inside frames) and the **circuit
+  breaker** (Step 5g).
+
+Not ported: original per-deck theme design, the Aristotelian audience table,
+code-first standalone figure scripts, the MB/MC rhythm check, and the rhetoric
+and graphics audit agents. Those depend on `/tikz` and on essays this repo does
+not ship; adopting them is a separate decision.
 
 ## Supporting Files
 
